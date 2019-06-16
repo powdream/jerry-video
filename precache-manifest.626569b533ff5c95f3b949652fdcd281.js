@@ -1,19 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "82bb1693dae88ddf5d06a020735734fc",
+    "revision": "19c01c1632c7a7eae3397cb6a4642934",
     "url": "/jerry-video/index.html"
   },
   {
-    "revision": "86248ffc54fea6e23fd9",
+    "revision": "d9331ed702b50cc747e8",
     "url": "/jerry-video/static/css/main.2cce8147.chunk.css"
   },
   {
-    "revision": "2e0129063922e3bb197a",
-    "url": "/jerry-video/static/js/2.b41502e9.chunk.js"
+    "revision": "b42d888b9db887f3be5e",
+    "url": "/jerry-video/static/js/2.289b1a84.chunk.js"
   },
   {
-    "revision": "86248ffc54fea6e23fd9",
-    "url": "/jerry-video/static/js/main.a0d5cdeb.chunk.js"
+    "revision": "d9331ed702b50cc747e8",
+    "url": "/jerry-video/static/js/main.3c330bf2.chunk.js"
   },
   {
     "revision": "2d80d1fd06b2b6bae7a6",
