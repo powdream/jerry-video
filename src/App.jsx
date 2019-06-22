@@ -2,6 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import ToplistStore from './data-toplist/ToplistStore';
+import Progress from './component/Progress';
 
 class App extends React.Component {
   constructor(props) {
@@ -36,7 +37,7 @@ class App extends React.Component {
             Learn React
           </a>
           <p>Trying with class App: {this.state.name}, {this.props.id}</p>
-          <p>Is loaded: {String(this.state.isLoaded)}</p>
+          <Progress isVisible={!this.state.isLoaded} />
           <p>ENTERTAINMENT: {this.state.toplist ? this.state.toplist.ENTERTAINMENT[0].title : ""}</p>
         </header>
       </div>
