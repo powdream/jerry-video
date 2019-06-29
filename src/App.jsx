@@ -1,21 +1,18 @@
 import React from 'react';
-// import logo from './logo.svg';
 import './App.css';
 import ToplistStore from './data-toplist/ToplistStore';
-// import Progress from './component/Progress';
-import CategoryTabs from './component/CategoryTabs';
+import TopList, { TopListStatusBuilder } from './page/TopList';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      toplist: null
+      topListStatus: new TopListStatusBuilder().build()
     };
     this.toplistStore = new ToplistStore(false);
   }
 
   componentDidMount() {
-    console.log("Hello, world");
     this.triggerToFetchToplist();
   }
 
@@ -26,7 +23,7 @@ class App extends React.Component {
           <h1>Jerry Video</h1>
         </header>
         <main>
-          <CategoryTabs toplist={this.state.toplist} id="toplist-category-tabs" />
+          <TopList topListStatus={this.state.topListStatus} id="toplist-category-tabs" />
         </main>
       </div>
     );
@@ -34,13 +31,17 @@ class App extends React.Component {
 
   async triggerToFetchToplist() {
     try {
-      let json = await this.toplistStore.fetch();
+      const json = await this.toplistStore.fetch();
       this.setState({
-        toplist: json
+        topListStatus: new TopListStatusBuilder().setTopList(json).build()
       });
       console.log(json);
-    } catch (error) {
-      console.error('Augh, there was an error!', error.statusText);
+    } catch (err) {
+      this.setState({
+        topListStatus: new TopListStatusBuilder()
+          .setError(err.statusText ? err.statusText : "Unknown error")
+          .build()
+      })
     }
   }
 }
