@@ -13,7 +13,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    console.log("Hello, world");
     this.triggerToFetchToplist();
   }
 
@@ -43,7 +42,6 @@ class App extends React.Component {
           .setError(err.statusText ? err.statusText : "Unknown error")
           .build()
       })
-      console.error('Augh, there was an error!', err.statusText);
     }
   }
 }

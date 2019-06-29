@@ -2,6 +2,7 @@ import React from 'react';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import Progress from '../component/Progress';
+import Channel from '../component/Channel';
 
 const categories = [
   { eventKey: "DRAMA", title: "드라마" },
@@ -32,7 +33,7 @@ const TopList = ({ topListStatus }) => {
     ));
   } else if (!topListStatus.error) {
     return renderTopList(toplist, "ENTERTAINMENT", (channel) => (
-      <div>{channel[0].title}</div>
+      <Channel channel={channel} />
     ));
   } else {
     return renderTopList(toplist, "ENTERTAINMENT", () => (
