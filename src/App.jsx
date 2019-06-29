@@ -1,15 +1,15 @@
 import React from 'react';
-// import logo from './logo.svg';
 import './App.css';
 import ToplistStore from './data-toplist/ToplistStore';
-// import Progress from './component/Progress';
-import CategoryTabs from './component/CategoryTabs';
+import TopList from './page/TopList';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      toplist: null
+      toplist: null,
+      isLoaded: false,
+      error: null
     };
     this.toplistStore = new ToplistStore(false);
   }
@@ -26,7 +26,11 @@ class App extends React.Component {
           <h1>Jerry Video</h1>
         </header>
         <main>
-          <CategoryTabs toplist={this.state.toplist} id="toplist-category-tabs" />
+          <TopList
+            toplist={this.state.toplist}
+            isLoaded={this.state.isLoaded}
+            error={this.state.error}
+            id="toplist-category-tabs" />
         </main>
       </div>
     );
@@ -36,11 +40,16 @@ class App extends React.Component {
     try {
       let json = await this.toplistStore.fetch();
       this.setState({
-        toplist: json
+        toplist: json,
+        isLoaded: true
       });
       console.log(json);
-    } catch (error) {
-      console.error('Augh, there was an error!', error.statusText);
+    } catch (err) {
+      this.setState({
+        error: err.statusText ? err.statusText : "Unknown error",
+        isLoaded: true
+      })
+      console.error('Augh, there was an error!', err.statusText);
     }
   }
 }

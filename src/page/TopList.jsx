@@ -1,7 +1,7 @@
 import React from 'react';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
-import Progress from './Progress';
+import Progress from '../component/Progress';
 
 const inProgressTabs = () => {
   return (
@@ -47,13 +47,14 @@ const loadedCategoryTabs = (toplist) => {
   );
 };
 
-const CategoryTabs = (props) => {
-  const toplist = props.toplist;
-  if (!toplist) {
+const TopList = ({ toplist, isLoaded, error }) => {
+  if (!isLoaded) {
     return inProgressTabs();
-  } else {
+  } else if (!error) {
     return loadedCategoryTabs(toplist);
+  } else {
+    return <div>{error}</div>;
   }
 };
 
-export default CategoryTabs;
+export default TopList;
