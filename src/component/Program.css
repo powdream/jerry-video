@@ -1,0 +1,13 @@
+.Program {
+  text-align: start;
+  vertical-align: middle;
+}
+
+.Program-title {
+  font-weight: 900;
+}
+
+.Program-description {
+  font-size: smaller;
+  opacity: 0.8;
+}
