@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/jerry-video/static/css/main.9930bc74.chunk.css",
-    "main.js": "/jerry-video/static/js/main.00ce423d.chunk.js",
-    "main.js.map": "/jerry-video/static/js/main.00ce423d.chunk.js.map",
+    "main.js": "/jerry-video/static/js/main.7320c84d.chunk.js",
+    "main.js.map": "/jerry-video/static/js/main.7320c84d.chunk.js.map",
     "runtime~main.js": "/jerry-video/static/js/runtime~main.81437d05.js",
     "runtime~main.js.map": "/jerry-video/static/js/runtime~main.81437d05.js.map",
-    "static/js/2.8a9b3bb1.chunk.js": "/jerry-video/static/js/2.8a9b3bb1.chunk.js",
-    "static/js/2.8a9b3bb1.chunk.js.map": "/jerry-video/static/js/2.8a9b3bb1.chunk.js.map",
+    "static/js/2.cbbf6e2a.chunk.js": "/jerry-video/static/js/2.cbbf6e2a.chunk.js",
+    "static/js/2.cbbf6e2a.chunk.js.map": "/jerry-video/static/js/2.cbbf6e2a.chunk.js.map",
     "index.html": "/jerry-video/index.html",
-    "precache-manifest.362b7ebf497cfd0dbd523434194eb394.js": "/jerry-video/precache-manifest.362b7ebf497cfd0dbd523434194eb394.js",
+    "precache-manifest.fe6b2c9bc0bd5c83a03d93bc95e9f059.js": "/jerry-video/precache-manifest.fe6b2c9bc0bd5c83a03d93bc95e9f059.js",
     "service-worker.js": "/jerry-video/service-worker.js",
     "static/css/main.9930bc74.chunk.css.map": "/jerry-video/static/css/main.9930bc74.chunk.css.map"
   }
