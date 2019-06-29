@@ -47,13 +47,45 @@ const loadedCategoryTabs = (toplist) => {
   );
 };
 
-const TopList = ({ toplist, isLoaded, error }) => {
-  if (!isLoaded) {
+const TopList = ({ topListStatus }) => {
+  if (!topListStatus.isLoaded) {
     return inProgressTabs();
-  } else if (!error) {
-    return loadedCategoryTabs(toplist);
+  } else if (!topListStatus.error) {
+    return loadedCategoryTabs(topListStatus.toplist);
   } else {
-    return <div>{error}</div>;
+    return <div>{topListStatus.error}</div>;
+  }
+};
+
+export class TopListStatusBuilder {
+  constructor() {
+    this.toplist = null;
+    this.isLoaded = false;
+    this.error = null;
+  }
+
+  setTopList(toplist) {
+    this.toplist = toplist;
+    this.isLoaded = true;
+    return this;
+  }
+
+  setError(error) {
+    this.error = error;
+    this.isLoaded = true;
+    return this;
+  }
+
+  build() {
+    return new TopListStatus(this);
+  }
+};
+
+export class TopListStatus {
+  constructor(builder) {
+    this.toplist = builder.toplist;
+    this.isLoaded = builder.isLoaded;
+    this.error = builder.error;
   }
 };
 
