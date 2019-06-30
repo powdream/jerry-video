@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import ToplistStore from './data-toplist/ToplistStore';
 import TopList, { TopListStatusBuilder } from './page/TopList';
+import EventDefinitions, { globalEmitter } from './event/Event';
 
 class App extends React.Component {
   constructor(props) {
@@ -14,6 +15,13 @@ class App extends React.Component {
 
   componentDidMount() {
     this.triggerToFetchToplist();
+    globalEmitter.on(EventDefinitions.PROGRAM_CLICKED, (param) => {
+      console.log(param);
+    });
+  }
+
+  componentWillUnmount() {
+    globalEmitter.removeAllListeners();
   }
 
   render() {

@@ -1,15 +1,20 @@
 import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Program from './Program';
+import EventDefinitions, { globalEmitter } from '../event/Event';
 
+const Channel = ({ channel }) => (<ListGroup>{channel.map(programToListItem)}</ListGroup>);
 
-const Channel = ({ channel }) => {
-  const programList = channel.map((program, index) => (
-    <ListGroup.Item key={program.uniqueId} action as="a">
+const programToListItem = (program) => {
+  const clickHandler = () => {
+    globalEmitter.emit(EventDefinitions.PROGRAM_CLICKED, program);
+  };
+
+  return (
+    <ListGroup.Item key={program.uniqueId} action as="a" onClick={clickHandler}>
       <Program program={program} />
     </ListGroup.Item>
-  ));
-  return (<ListGroup>{programList}</ListGroup>);
+  )
 };
 
 export default Channel;
