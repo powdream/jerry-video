@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import ToplistStore from './data-toplist/ToplistStore';
-import TopList, { TopListStatusBuilder } from './page/TopList';
+import TopList, { TopListStatus } from './page/TopList';
 import EventDefinitions, { globalEmitter } from './event/Event';
 import { PageType, PageStack } from './page/PageStack';
 
@@ -13,7 +13,7 @@ class App extends React.Component {
     this.state = {
       pageStack: pageStack.push({
         pageType: PageType.TOP_LIST,
-        topListStatus: new TopListStatusBuilder().build()
+        topListStatus: TopListStatus.empty()
       })
     };
     this.toplistStore = new ToplistStore(false);
@@ -78,14 +78,12 @@ class App extends React.Component {
       console.log(json);
       this.updatePageStack((pageStack) => pageStack.pop().push({
         pageType: PageType.TOP_LIST,
-        topListStatus: new TopListStatusBuilder().setTopList(json).build()
+        topListStatus: TopListStatus.fromToplist(json)
       }));
     } catch (err) {
       this.updatePageStack((pageStack) => pageStack.pop().push({
         pageType: PageType.TOP_LIST,
-        topListStatus: new TopListStatusBuilder()
-          .setError(err.statusText ? err.statusText : "Unknown error")
-          .build()
+        topListStatus: TopListStatus.fromError(err.statusText)
       }));
     }
   }
