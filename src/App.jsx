@@ -3,24 +3,18 @@ import './App.css';
 import ToplistStore from './data-toplist/ToplistStore';
 import TopList, { TopListStatusBuilder } from './page/TopList';
 import EventDefinitions, { globalEmitter } from './event/Event';
-
-const PageType = {
-  TOP_LIST: "top-list",
-  PROGRAM: "program"
-};
-
-class AppStatus {
-  constructor(pageType, data) {
-    this.pageType = pageType;
-    this.data = data;
-  }
-}
+import { PageType, PageStack } from './page/PageStack';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
+
+    const pageStack = new PageStack();
     this.state = {
-      appStatus: new AppStatus(PageType.TOP_LIST, { topListStatus: new TopListStatusBuilder().build() })
+      pageStack: pageStack.push({
+        pageType: PageType.TOP_LIST,
+        topListStatus: new TopListStatusBuilder().build()
+      })
     };
     this.toplistStore = new ToplistStore(false);
   }
@@ -37,49 +31,66 @@ class App extends React.Component {
   }
 
   render() {
-    let content;
-    if (this.state.appStatus.pageType === PageType.TOP_LIST) {
-      const topListStatus = this.state.appStatus.data.topListStatus;
-      content = (
-        <TopList topListStatus={topListStatus} id="toplist-category-tabs" />
-      );
-    } else {
-      content = "";
-    }
-
     return (
       <div className="App">
-        <header className="App-header">
-          <h1>Jerry Video</h1>
-        </header>
-        <main>{content}</main>
+        {this.renderContent()}
       </div>
     );
   }
 
+  currentPage() {
+    return this.state.pageStack.peek();
+  }
+
+  renderContent() {
+    const currentPage = this.currentPage();
+    switch (currentPage.pageType) {
+      case PageType.TOP_LIST: {
+        const topListStatus = currentPage.topListStatus;
+        return (
+          <div>
+            <header className="App-header">
+              <h1>Jerry Video</h1>
+            </header>
+            <main>
+              <TopList topListStatus={topListStatus} id="toplist-category-tabs" />
+            </main>
+          </div>
+        );
+      }
+
+      default: {
+        return "";
+      }
+    }
+  }
+
   async triggerToFetchToplist() {
     try {
+      console.log("triggerToFetchToplist():");
       const json = await this.toplistStore.fetch();
-      this.setState({
-        appStatus: new AppStatus(
-          PageType.TOP_LIST,
-          {
-            topListStatus: new TopListStatusBuilder().setTopList(json).build()
-          }
-        )
-      });
       console.log(json);
-    } catch (err) {
+      const pageStack = this.state.pageStack;
       this.setState({
-        appStatus: new AppStatus(
-          PageType.TOP_LIST,
-          {
+        pageStack: pageStack
+          .pop()
+          .push({
+            pageType: PageType.TOP_LIST,
+            topListStatus: new TopListStatusBuilder().setTopList(json).build()
+          })
+      });
+    } catch (err) {
+      const pageStack = this.state.pageStack;
+      this.setState({
+        pageStack: pageStack
+          .pop()
+          .push({
+            pageType: PageType.TOP_LIST,
             topListStatus: new TopListStatusBuilder()
               .setError(err.statusText ? err.statusText : "Unknown error")
               .build()
-          }
-        )
-      })
+          })
+      });
     }
   }
 }
