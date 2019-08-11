@@ -3,7 +3,8 @@ import {
 } from 'events';
 
 const EventDefinitions = {
-  PROGRAM_CLICKED: "program-clicked"
+  PROGRAM_CLICKED: "program-clicked",
+  PROGRAM_VIEWER_CLICKED: "program-viewer-clicked"
 };
 
 export default EventDefinitions;

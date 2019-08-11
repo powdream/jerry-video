@@ -1,5 +1,6 @@
 import React from 'react';
 import Progress from '../component/Progress';
+import ProgramViewers from '../component/ProgramViewers';
 
 export class ProgramStatus {
   constructor(data) {
@@ -31,18 +32,33 @@ export class ProgramStatus {
 }
 
 const Program = ({ programStatus }) => {
-  const { isLoaded } = programStatus;
-  const { title, description } = programStatus.program;
+  const { title, description, optionalDescription } = programStatus.program;
+  const header = !optionalDescription ? (
+    <div>
+      <h3>{title}</h3>
+      <p>{description}</p>
+    </div>
+  ) : (
+      <div>
+        <h3>{title}</h3>
+        <p>{description}<br />{optionalDescription}</p>
+      </div>
+    );
+
+  const { isLoaded, programViewers, error } = programStatus;
   if (!isLoaded) {
     return (
       <div>
-        <h3>{title} - {description}</h3>
+        {header}
         <Progress isVisible={true} />
       </div>
     );
-  } else {
+  } else if (programViewers) {
     return (
-      <h3>{title} - {description}</h3>
+      <div>
+        {header}
+        <ProgramViewers programViewers={programStatus.programViewers} />
+      </div>
     );
   }
 };

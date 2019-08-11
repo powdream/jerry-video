@@ -28,6 +28,10 @@ class App extends React.Component {
     globalEmitter.on(EventDefinitions.PROGRAM_CLICKED, async (program) => {
       await this.handleProgramClicked(program);
     });
+
+    globalEmitter.on(EventDefinitions.PROGRAM_VIEWER_CLICKED, async (param) => {
+      console.log(EventDefinitions.PROGRAM_VIEWER_CLICKED, param);
+    });
   }
 
   componentWillUnmount() {
