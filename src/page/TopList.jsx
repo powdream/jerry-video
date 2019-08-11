@@ -42,7 +42,7 @@ const TopList = ({ topListStatus }) => {
   }
 };
 
-export class TopListStatusBuilder {
+class TopListStatusBuilder {
   constructor() {
     this.toplist = null;
     this.isLoaded = false;
@@ -71,6 +71,18 @@ export class TopListStatus {
     this.toplist = builder.toplist;
     this.isLoaded = builder.isLoaded;
     this.error = builder.error;
+  }
+
+  static empty() {
+    return new TopListStatusBuilder().build();
+  }
+
+  static fromToplist(toplist) {
+    return new TopListStatusBuilder().setTopList(toplist).build();
+  }
+
+  static fromError(error) {
+    return new TopListStatusBuilder().setError(error == null ? "Unknown error" : error).build();
   }
 };
 
