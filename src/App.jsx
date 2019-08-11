@@ -65,32 +65,28 @@ class App extends React.Component {
     }
   }
 
+  updatePageStack(action) {
+    this.setState({
+      pageStack: action(this.state.pageStack)
+    });
+  }
+
   async triggerToFetchToplist() {
     try {
       console.log("triggerToFetchToplist():");
       const json = await this.toplistStore.fetch();
       console.log(json);
-      const pageStack = this.state.pageStack;
-      this.setState({
-        pageStack: pageStack
-          .pop()
-          .push({
-            pageType: PageType.TOP_LIST,
-            topListStatus: new TopListStatusBuilder().setTopList(json).build()
-          })
-      });
+      this.updatePageStack((pageStack) => pageStack.pop().push({
+        pageType: PageType.TOP_LIST,
+        topListStatus: new TopListStatusBuilder().setTopList(json).build()
+      }));
     } catch (err) {
-      const pageStack = this.state.pageStack;
-      this.setState({
-        pageStack: pageStack
-          .pop()
-          .push({
-            pageType: PageType.TOP_LIST,
-            topListStatus: new TopListStatusBuilder()
-              .setError(err.statusText ? err.statusText : "Unknown error")
-              .build()
-          })
-      });
+      this.updatePageStack((pageStack) => pageStack.pop().push({
+        pageType: PageType.TOP_LIST,
+        topListStatus: new TopListStatusBuilder()
+          .setError(err.statusText ? err.statusText : "Unknown error")
+          .build()
+      }));
     }
   }
 }
