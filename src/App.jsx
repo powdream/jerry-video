@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import ToplistStore from './data-toplist/ToplistStore';
 import TopList, { TopListStatus } from './page/TopList';
+import Program, { ProgramStatus } from './page/Program';
 import EventDefinitions, { globalEmitter } from './event/Event';
 import { PageType, PageStack } from './page/PageStack';
 
@@ -22,7 +23,14 @@ class App extends React.Component {
   componentDidMount() {
     this.triggerToFetchToplist();
     globalEmitter.on(EventDefinitions.PROGRAM_CLICKED, (param) => {
+      console.log("Program clicked:");
       console.log(param);
+
+      const programStatus = ProgramStatus.loading(param);
+      this.updatePageStack((pageStack) => pageStack.push({
+        pageType: PageType.PROGRAM,
+        programStatus: programStatus
+      }));
     });
   }
 
@@ -33,7 +41,12 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        {this.renderContent()}
+        <header className="App-header">
+          <h1>Jerry Video</h1>
+        </header>
+        <main>
+          {this.renderContent()}
+        </main>
       </div>
     );
   }
@@ -43,25 +56,26 @@ class App extends React.Component {
   }
 
   renderContent() {
-    const currentPage = this.currentPage();
-    switch (currentPage.pageType) {
-      case PageType.TOP_LIST: {
-        const topListStatus = currentPage.topListStatus;
-        return (
-          <div>
-            <header className="App-header">
-              <h1>Jerry Video</h1>
-            </header>
-            <main>
-              <TopList topListStatus={topListStatus} id="toplist-category-tabs" />
-            </main>
-          </div>
-        );
-      }
+    const renderToplistContent = ({ topListStatus }) => (
+      <TopList topListStatus={topListStatus} id="page-toplist" />
+    );
 
-      default: {
+    const renderProgramContent = ({ programStatus }) => (
+      <Program programStatus={programStatus} id="page-program" />
+    );
+
+    console.log("renderContent():");
+    const currentPage = this.currentPage();
+    console.log(currentPage);
+    switch (currentPage.pageType) {
+      case PageType.TOP_LIST:
+        return renderToplistContent(currentPage);
+
+      case PageType.PROGRAM:
+        return renderProgramContent(currentPage);
+
+      default:
         return "";
-      }
     }
   }
 
