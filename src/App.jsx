@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import ToplistStore from './data-toplist/ToplistStore';
 import TopList, { TopListStatus } from './page/TopList';
+import ProgramStore from './data-program/ProgramStore';
 import Program, { ProgramStatus } from './page/Program';
 import EventDefinitions, { globalEmitter } from './event/Event';
 import { PageType, PageStack } from './page/PageStack';
@@ -18,19 +19,14 @@ class App extends React.Component {
       })
     };
     this.toplistStore = new ToplistStore(false);
+    this.programStore = new ProgramStore(false);
   }
 
   componentDidMount() {
-    this.triggerToFetchToplist();
-    globalEmitter.on(EventDefinitions.PROGRAM_CLICKED, (param) => {
-      console.log("Program clicked:");
-      console.log(param);
+    this.fetchToplistAsync();
 
-      const programStatus = ProgramStatus.loading(param);
-      this.updatePageStack((pageStack) => pageStack.push({
-        pageType: PageType.PROGRAM,
-        programStatus: programStatus
-      }));
+    globalEmitter.on(EventDefinitions.PROGRAM_CLICKED, async (program) => {
+      await this.handleProgramClicked(program);
     });
   }
 
@@ -64,9 +60,8 @@ class App extends React.Component {
       <Program programStatus={programStatus} id="page-program" />
     );
 
-    console.log("renderContent():");
     const currentPage = this.currentPage();
-    console.log(currentPage);
+    console.log("renderContent(): currentPage=", currentPage);
     switch (currentPage.pageType) {
       case PageType.TOP_LIST:
         return renderToplistContent(currentPage);
@@ -85,19 +80,49 @@ class App extends React.Component {
     });
   }
 
-  async triggerToFetchToplist() {
+  async handleProgramClicked(program) {
+    console.log("handleProgramClicked():", program);
+    const programStatus = ProgramStatus.loading(program);
+    this.updatePageStack((pageStack) => pageStack.push({
+      pageType: PageType.PROGRAM,
+      programStatus: programStatus
+    }));
+    await this.fetchProgramViewersAsync(program, programStatus);
+  }
+
+  async fetchToplistAsync() {
     try {
-      console.log("triggerToFetchToplist():");
       const json = await this.toplistStore.fetch();
-      console.log(json);
+      console.log("fetchToplistAsync(): success:", json);
+
       this.updatePageStack((pageStack) => pageStack.pop().push({
         pageType: PageType.TOP_LIST,
         topListStatus: TopListStatus.fromToplist(json)
       }));
     } catch (err) {
+      console.log("fetchToplistAsync(): failure:", err);
       this.updatePageStack((pageStack) => pageStack.pop().push({
         pageType: PageType.TOP_LIST,
         topListStatus: TopListStatus.fromError(err.statusText)
+      }));
+    }
+  }
+
+  async fetchProgramViewersAsync(program, programStatus) {
+    try {
+      const json = await this.programStore.fetch(program);
+      console.log("fetchProgramViewersAsync(): success:", json);
+
+      this.updatePageStack((pageStack) => pageStack.pop().push({
+        pageType: PageType.PROGRAM,
+        programStatus: programStatus.succeededToLoad(json)
+      }));
+    }
+    catch (err) {
+      console.log("fetchProgramViewersAsync(): failure:", err);
+      this.updatePageStack((pageStack) => pageStack.pop().push({
+        pageType: PageType.PROGRAM,
+        programStatus: programStatus.failedToLoad(err.statusText)
       }));
     }
   }

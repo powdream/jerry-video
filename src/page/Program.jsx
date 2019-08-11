@@ -31,11 +31,20 @@ export class ProgramStatus {
 }
 
 const Program = ({ programStatus }) => {
-  console.log(programStatus);
+  const { isLoaded } = programStatus;
   const { title, description } = programStatus.program;
-  return (
-    <h3>{title} - {description}</h3>
-  );
+  if (!isLoaded) {
+    return (
+      <div>
+        <h3>{title} - {description}</h3>
+        <Progress isVisible={true} />
+      </div>
+    );
+  } else {
+    return (
+      <h3>{title} - {description}</h3>
+    );
+  }
 };
 
 export default Program;
