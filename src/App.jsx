@@ -30,7 +30,8 @@ class App extends React.Component {
     });
 
     globalEmitter.on(EventDefinitions.PROGRAM_VIEWER_CLICKED, async (param) => {
-      console.log(EventDefinitions.PROGRAM_VIEWER_CLICKED, param);
+      const { programId, programHost, postData } = param;
+      await this.handleProgramViewerClicked(programId, programHost, postData);
     });
   }
 
@@ -94,6 +95,23 @@ class App extends React.Component {
     await this.fetchProgramViewersAsync(program, programStatus);
   }
 
+  async handleProgramViewerClicked(programId, programHost, postData) {
+    console.log("handleProgramViewerClicked():",
+      {
+        "id": programId, "host": programHost, "body": postData
+      }
+    );
+
+    try {
+      const url = await this.programStore.fetchViewerUrl(programId, programHost, postData);
+      window.open(url, "_blank");
+      console.log("handleProgramViewerClicked(): url:", url);
+    } catch (error) {
+      console.log("handleProgramViewerClicked(): error:", error);
+    }
+
+  }
+
   async fetchToplistAsync() {
     try {
       const json = await this.toplistStore.fetch();
@@ -114,7 +132,7 @@ class App extends React.Component {
 
   async fetchProgramViewersAsync(program, programStatus) {
     try {
-      const json = await this.programStore.fetch(program);
+      const json = await this.programStore.fetchViewerListAsync(program);
       console.log("fetchProgramViewersAsync(): success:", json);
 
       this.updatePageStack((pageStack) => pageStack.pop().push({
