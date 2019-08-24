@@ -12,10 +12,15 @@ export default class StoreBase {
     }
   }
 
-  makeRequest(method, url) {
+  makeRequest(method, url, extra) {
     return new Promise((resolve, reject) => {
-      let xhr = new XMLHttpRequest();
+      const xhr = new XMLHttpRequest();
       xhr.open(method, url);
+      let requestBody = null;
+      if (method === "POST" && extra && extra.body) {
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        requestBody = extra.body;
+      }
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           resolve(xhr.response);
@@ -32,7 +37,7 @@ export default class StoreBase {
           statusText: xhr.statusText
         });
       };
-      xhr.send();
+      xhr.send(requestBody);
     });
   }
 }
